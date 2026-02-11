@@ -1,4 +1,4 @@
-import sqlite3
+statustatusmport sqlite3
 from fastapi import FastAPI
 from pydantic import BaseModel
 
@@ -37,7 +37,7 @@ def create_new_task(description: str, status = False):
     return {
     "id":tasks_id,
     "description": description,
-    "status": status
+    "status": bool(status)
     }
 
 
@@ -81,7 +81,7 @@ def update_status(id: int, status: bool):
     if answer == 0: #если 0, значит ничего не обновилось задачи такой неи
         return {"error": "Задача не найдена"}
     else:
-        return {"id": id, "status": status}
+        return {"id": id, "status": bool(status)}
 
         
 @app.delete("/tasks/{id}")   
