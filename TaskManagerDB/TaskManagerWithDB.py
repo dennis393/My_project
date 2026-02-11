@@ -71,7 +71,8 @@ def get_one_task(id: int):
                 
 @app.put("/tasks/{id}")   
 def update_status(id: int, status: bool):
-    connection = sqlite3.connect('data_base.db')     cursor = connection.cursor() 
+    connection = sqlite3.connect('data_base.db')    
+    cursor = connection.cursor() 
     cursor.execute('UPDATE Tasks SET status = ? WHERE id = ?', (status, id))
     connection.commit()
     answer = cursor.rowcount #колличество измененных строк
