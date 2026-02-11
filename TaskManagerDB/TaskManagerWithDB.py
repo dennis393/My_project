@@ -1,4 +1,4 @@
-import sqlite3
+statustusort sqlite3
 from fastapi import FastAPI
 from pydantic import BaseModel
 
@@ -26,7 +26,7 @@ def create_new_task(description: str, status: bool = False):
     db_val = 1 if status else 0
     connection = sqlite3.connect('data_base.db')
     cursor = connection.cursor()
-    cursor.execute('INSERT INTO Tasks( description, status) VALUES(?, ?)',(description, status))
+    cursor.execute('INSERT INTO Tasks( description, status) VALUES(?, ?)',(description, db_val))
     connection.commit() #сначало сохраняем
     tasks_id = cursor.lastrowid #вытаскиваем id
     cursor.close() #затем закрываем
