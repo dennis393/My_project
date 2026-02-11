@@ -1,4 +1,4 @@
-Fastapi
+FastAPI
 pydantic
-SQLite3
 uvicorn
+
