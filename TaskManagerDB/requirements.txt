@@ -1,0 +1,4 @@
+Fastapi
+pydantic
+SQLite3
+uvicorn
