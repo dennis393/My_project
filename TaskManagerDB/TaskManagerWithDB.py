@@ -23,6 +23,7 @@ connection.commit()
 
 @app.post("/tasks")
 def create_new_task(description: str, status: bool = False):    
+    db_val = 1 if status else 0
     connection = sqlite3.connect('data_base.db')
     cursor = connection.cursor()
     cursor.execute('INSERT INTO Tasks( description, status) VALUES(?, ?)',(description, status))
@@ -33,7 +34,7 @@ def create_new_task(description: str, status: bool = False):
     return {
     "id":tasks_id,
     "description": description,
-    "status": bool(status)
+    "status": status
     }
 
 
