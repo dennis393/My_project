@@ -22,7 +22,7 @@ connection.commit()
 
 
 @app.post("/tasks")
-def create_new_task(description: str, status = False):
+def create_new_task(description: str, status: bool = False):
     if status:
         status = 1
     else:
