@@ -5,7 +5,7 @@ class newUser(BaseModel):
     username: str
     userpassword: str
  
-#Схема для JWT токена   
+#Схема для JWT токена, аутентификация  
 class Token(BaseModel):
     access_token: str
     token_type: str

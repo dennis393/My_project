@@ -30,10 +30,10 @@ def create_new_user(new_user: newUser):
     
     return "Пользователь успешно добавлен"
 
-
+'''
 #Тут будет роутер с аутентификацией
 @router.post("/Authentication")
-
+'''
 
 @router.post("/Task")
 def create_task(title: str, status: bool):
