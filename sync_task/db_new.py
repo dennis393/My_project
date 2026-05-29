@@ -31,6 +31,11 @@ class Task(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("Users.id"), nullable=True)
     
 
+def get_db():
+    db = sessionlocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 sessionlocal = sessionmaker(bind=engine)
-Base.metadata.create_all(engine)

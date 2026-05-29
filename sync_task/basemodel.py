@@ -11,6 +11,7 @@ class Token(BaseModel):
     token_type: str
 
 
+
 class Tasks(BaseModel):
     id: int | None = None
     title: str | None = None

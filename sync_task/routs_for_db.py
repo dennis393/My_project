@@ -1,8 +1,11 @@
 from fastapi import APIRouter, HTTPException
-from db_new import Task, sessionlocal, UserDB
+from db_new import Task, UserDB, sessionlocal, get_db
 from basemodel import newUser
 from pwdlib import PasswordHash
-from secure import get_password_hash
+from fastapi import Depends
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from typing import Annotated
+from secure import get_password_hash, verify_password, create_access_token, get_user
 
 router = APIRouter()
 
@@ -30,10 +33,17 @@ def create_new_user(new_user: newUser):
     
     return "Пользователь успешно добавлен"
 
-'''
-#Тут будет роутер с аутентификацией
-@router.post("/Authentication")
-'''
+@router.post("/token")
+def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db = Depends(get_db)):
+    user = get_user(db, form_data.username)
+    if not user:
+        raise HTTPException(status_code=401, detail="Неверный логин или пароль")
+    if not verify_password(form_data.password, user.hashed_password):
+        raise HTTPException(status_code=401, detail="Неверный логин или пароль")
+    access_token = create_access_token(data={"sub": user.name})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
 
 @router.post("/Task")
 def create_task(title: str, status: bool):
