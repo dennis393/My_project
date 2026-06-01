@@ -11,6 +11,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 import jwt
 from jwt.exceptions import InvalidTokenError
 from db_new import UserDB, get_db
+from basemodel import TokenData
 
 password_hash = PasswordHash.recommended()
 
@@ -65,7 +66,7 @@ def get_user(db, username:str):
 def get_curr_user(token: Annotated[str, Depends(oauth2_scheme)], db = Depends(get_db)):
       credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
+        detail="Не удалось проверить учетные данные",
         headers={"WWW-Authenticate": "Bearer"},
     )
       token_data = verify_token(token, credentials_exception)

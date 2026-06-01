@@ -5,7 +5,7 @@ from pwdlib import PasswordHash
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from typing import Annotated
-from secure import get_password_hash, verify_password, create_access_token, get_user
+from secure import get_password_hash, verify_password, create_access_token, get_user, get_curr_user
 
 router = APIRouter()
 
@@ -45,11 +45,12 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db = Depen
 
 
 
+#Роутер для создания задачи, если пользователь зарегистрирован
 @router.post("/Task")
-def create_task(title: str, status: bool):
+def create_task(title: str, status: bool, current_user = Depends(get_curr_user)):
     data_base = sessionlocal()
     try:
-        task1 = Task(title = title, status = status)
+        task1 = Task(title = title, status = status, user_id=current_user.id)
         data_base.add(task1)
         data_base.commit()
         data_base.close()
@@ -67,25 +68,33 @@ def get_list_tasks():
         data_base.close()
         return tasks
 
-
+#Роутер обновления статуса задачи если пользователь аутентифицирован, конкретный пользователь
+#Может изменить статус только у своей задачи
 @router.put("/Task")      
-def update_status(id: int, status: bool):
+def update_status(id: int, status: bool, current_user = Depends(get_curr_user)):
     data_base = sessionlocal() 
     task = data_base.get(Task, id)
     if task is None:
         return "Задача не найдена"
+    if task.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Нет доступа")
     task.status = status
     res =  f"{task.id}, {task.title}, {task.status}"
     data_base.commit()
     data_base.close()
     return res
-    
+
+#Роутер удаления задачи если пользователь аутентифицирован, конкретный пользователь
+#Может удалить только свою задачу  
 @router.delete("/Task")    
-def delete_task(id: int):
+def delete_task(id: int, current_user = Depends(get_curr_user)):
     data_base = sessionlocal()
     task_for_del = data_base.get(Task, id)
     if task_for_del is None:
         return "Задача не найдена"
+    
+    if task.user_id != current_user.id:
+        raise HTTPexception(status_code=403, detail="Нет доступа")
     data_base.delete(task_for_del)
     result = f"Задача под номером {task_for_del.id} удалена"
     data_base.commit()
