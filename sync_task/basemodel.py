@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-
+#Модель для нового пользователя
 class newUser(BaseModel):
     username: str
     userpassword: str
@@ -13,6 +13,7 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     username: str | None = None
 
+#Для задач
 class Tasks(BaseModel):
     id: int | None = None
     title: str | None = None
